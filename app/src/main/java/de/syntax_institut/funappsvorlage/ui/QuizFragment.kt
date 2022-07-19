@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import de.syntax_institut.funappsvorlage.R
+import de.syntax_institut.funappsvorlage.data.model.Question
 import de.syntax_institut.funappsvorlage.databinding.FragmentQuizBinding
 
 /**
@@ -81,14 +82,23 @@ class QuizFragment : Fragment() {
      * Die momentane Frage und die momentanen Antwortmöglichkeiten anzuzeigen
      */
     private fun setPriceQuestionAnswer() {
-        // Zeige die Frage an
-        // TODO
-
-        // Zeige die Antworten an
-        // TODO
 
         // Zeige die Preisstufe an
         // TODO
+        binding.tvPrice.text = getString(R.string.current_price, viewModel.currentQuestion.price)
+
+        // Zeige die Frage an
+        // TODO
+        binding.tvQuestion.text = viewModel.currentQuestion.question
+
+        // Zeige die Antworten an
+        // TODO
+        binding.tvAnswerA.text= viewModel.currentQuestion.answerA
+        binding.tvAnswerB.text= viewModel.currentQuestion.answerB
+        binding.tvAnswerC.text= viewModel.currentQuestion.answerC
+        binding.tvAnswerD.text= viewModel.currentQuestion.answerD
+
+
     }
 
     /**
@@ -99,12 +109,31 @@ class QuizFragment : Fragment() {
 
         // Überprüfe, ob die Antwort stimmt
         // TODO
+        viewModel.checkAnswer(answerIndex)
+
 
         // Wurde die Frage richtig beantwortet?
         // TODO
+        if (viewModel.lastAnswer == true){
+            textView.background = backgroundNormal
+            textView.setTextColor(white)
+
+            setPriceQuestionAnswer()
+        }else{
+            textView.background = backgroundWrong
+            textView.setTextColor(black)
+            showEndDialog(getString(R.string.game_over))
+        }
+
 
         // Wenn das Spiel beendet werden soll (gewonnen)
         // TODO
+        if (viewModel.wonTheMillion == true){
+            textView.background = backgroundCorrect
+            showEndDialog(getString(R.string.game_won))
+        }
+
+
     }
 
     /**
@@ -112,6 +141,18 @@ class QuizFragment : Fragment() {
      */
     private fun showEndDialog(title: String) {
         // TODO
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Gut geraten!")
+            .setMessage("Du hast ${viewModel.moneyWon}")
+            .setCancelable(false)
+            .setNegativeButton(R.string.exit) { _, _->
+                exitGame()
+            }
+            .setPositiveButton(R.string.play_again){ _, _->
+                restartGame()
+            }
+            .show()
+
     }
 
     /**

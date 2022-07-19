@@ -56,7 +56,8 @@ class QuizViewModel : ViewModel() {
         _moneyWon = 0
         questionIndex = 0
         _wonTheMillion = false
-        questionList = questionList.shuffled()
+        _currentQuestion = questionList[0]
+        _lastAnswer = true
     }
 
     /**
